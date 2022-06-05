@@ -35,15 +35,17 @@ void loop() {
     Serial.println(ev.cnt);
   }
   if(r.isPressed()){
-    float data[3];
+    Quaternion data;
     if(!rot.getRotation(data))
       return;
     Serial.print(-1);
     Serial.print(" ");
-    Serial.print(data[0]);
+    Serial.print(data.w, 10);
     Serial.print(" ");
-    Serial.print(data[1]);
+    Serial.print(data.x, 10);
     Serial.print(" ");
-    Serial.println(data[2]);
+    Serial.print(data.y, 10);
+    Serial.print(" ");
+    Serial.println(data.z, 10);
   }
 }

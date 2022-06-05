@@ -47,7 +47,7 @@ class Rotation{
   //Q1^-1 * Q2 = rot
   //(~Q1 * Q2)/|Q1|^2 = rot 
   //где ~Q1 - сопряженное с Q1
-  bool getRotation(float* vf) {
+  bool getRotation(Quaternion &q) {
     bool flg = updateQuaternion();
     if(newSeriesReq){
       if(!flg){
@@ -60,7 +60,10 @@ class Rotation{
     float a = Q1.getMagnitude();
     a *= a;
     rot = Quaternion(rot.w/a, rot.x/a, rot.y/a, rot.z/a);
-    mpu.dmpGetEuler(vf, &rot);
+    q.w = rot.w;
+    q.x = rot.x;
+    q.y = rot.y;
+    q.z = rot.z;
     return true;
   }
 };

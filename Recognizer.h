@@ -32,7 +32,7 @@ class Recognizer{
     int8_t cnt = 0;
     const int32_t CLICK_GAP = 250;
     const int32_t MIN_GAP = 10;
-    const int8_t MAX_CNT = 3;
+    const int8_t MAX_CNT = 4;
     
   public: 
     bool getState(){
@@ -59,6 +59,7 @@ class Recognizer{
         }
       }else if(!last_state && state && t-last_ev > MIN_GAP){
         cnt++;
+        cnt = min(cnt, MAX_CNT);
         last_state = state;
         last_ev = t;
       }else if(last_state && !state && t-last_ev > MIN_GAP){
@@ -69,11 +70,12 @@ class Recognizer{
           q_cnt = cnt;
           prs = false;  
           cnt = 0;        
-        }else if(cnt >= MAX_CNT){
-          q = CLICK;
-          q_cnt = cnt;
-          cnt = 0;
         }
+//        else if(cnt >= MAX_CNT){
+//          q = CLICK;
+//          q_cnt = cnt;
+//          cnt = 0;
+//        }
       }
     }
     void getEvent(Event &e){
