@@ -28,7 +28,7 @@ void loop() {
   r.getEvent(ev);
   if(!ev.isNone()){
     if(ev.q == Recognizer::PRESS){
-      rot.updateDefault();
+      rot.newSeries();
     }
     Serial.print(ev.q);
     Serial.print(" ");
@@ -36,7 +36,8 @@ void loop() {
   }
   if(r.isPressed()){
     float data[3];
-    rot.getRotation(data);
+    if(!rot.getRotation(data))
+      return;
     Serial.print(-1);
     Serial.print(" ");
     Serial.print(data[0]);

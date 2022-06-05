@@ -10,6 +10,7 @@ class Rotation{
   MPU6050 mpu;
   uint8_t fifoBuffer[45];
   Quaternion Q1, Q2;
+  bool newSeriesReq = false;
 
   public:
   Rotation(){}
@@ -24,7 +25,7 @@ class Rotation{
     mpuFlag = true;
   }
 
-  void updateQuaternion(){
+  bool updateQuaternion(){
     if (mpuFlag && mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {
       Quaternion q;
       VectorFloat gravity;
@@ -32,25 +33,35 @@ class Rotation{
       mpu.dmpGetGravity(&gravity, &q);
       mpuFlag = false;
       Q2 = q;
+      return true;
     }
+    return false;
   }
 
-  void updateDefault(){
-    updateQuaternion();
-    Q1 = Q2;
+  //Первый пакет станет Q1
+  void newSeries(){
+    newSeriesReq = true;
   }
 
   //Q2 = Q1 * rot
   //Q1^-1 * Q2 = rot
   //(~Q1 * Q2)/|Q1|^2 = rot 
   //где ~Q1 - сопряженное с Q1
-  void getRotation(float* vf) {
-    updateQuaternion();
+  bool getRotation(float* vf) {
+    bool flg = updateQuaternion();
+    if(newSeriesReq){
+      if(!flg){
+        return false;
+      }
+      Q1 = Q2; 
+      newSeriesReq = false;
+    }
     Quaternion rot = Q1.getConjugate().getProduct(Q2);
     float a = Q1.getMagnitude();
     a *= a;
     rot = Quaternion(rot.w/a, rot.x/a, rot.y/a, rot.z/a);
     mpu.dmpGetEuler(vf, &rot);
+    return true;
   }
 };
 #endif
