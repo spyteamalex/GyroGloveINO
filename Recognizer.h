@@ -2,10 +2,10 @@
 #define Recognizer_h
 #include "Arduino.h"
 struct Event{
-    int8_t q = 0;
-    int8_t cnt = 0;
+    uint8_t q = 0;
+    uint8_t cnt = 0;
     Event(){}
-    Event(int8_t q, int8_t cnt){
+    Event(uint8_t q, uint8_t cnt){
       this->q = q;
       this->cnt = cnt;
     }
@@ -16,23 +16,23 @@ struct Event{
 
 class Recognizer{
   public: 
-    static const int8_t NONE = 0;
-    static const int8_t CLICK = 1;
-    static const int8_t PRESS = 2;
-    static const int8_t RELEASE = 3;
+    static const uint8_t NONE = 0;
+    static const uint8_t CLICK = 1;
+    static const uint8_t PRESS = 2;
+    static const uint8_t RELEASE = 3;
    
   private:
-    int8_t port = 0;
-    int8_t q = NONE;
-    int8_t q_cnt = 0;
+    uint8_t port = 0;
+    uint8_t q = NONE;
+    uint8_t q_cnt = 0;
     
     bool last_state = 0;
     uint32_t last_ev = 0;
     bool prs = false;
-    int8_t cnt = 0;
-    const int32_t CLICK_GAP = 250;
-    const int32_t MIN_GAP = 10;
-    const int8_t MAX_CNT = 4;
+    uint8_t cnt = 0;
+    const uint32_t CLICK_GAP = 250;
+    const uint32_t MIN_GAP = 10;
+    const uint8_t MAX_CNT = 4;
     
   public: 
     bool getState(){
@@ -41,7 +41,7 @@ class Recognizer{
     bool isPressed(){
       return prs;
     }
-    Recognizer(int8_t p){
+    Recognizer(uint8_t p){
       port = p;
     }
     void loop() {
