@@ -20,6 +20,7 @@ class Recognizer{
     static const uint8_t CLICK = 1;
     static const uint8_t PRESS = 2;
     static const uint8_t RELEASE = 3;
+    static const uint8_t MOVE = 4;
    
   private:
     uint8_t port = 0;

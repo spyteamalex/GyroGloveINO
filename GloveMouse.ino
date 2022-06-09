@@ -5,9 +5,9 @@
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 
-#include <SoftwareSerial.h>
+//#include "SoftwareSerial.h"
 
-SoftwareSerial Serial1(9,8);
+//SoftwareSerial Serial1(9,8);
 
 Rotation rot;
 Recognizer r3(3), r4(4);
@@ -17,7 +17,7 @@ volatile bool mpuFlag = false;
 MPU6050 mpu;
 uint8_t fifoBuffer[45];
 const int8_t CHOOSE = 0;
-uint8_t period = 1;
+uint8_t period = 10;
 uint32_t last_gyro_send = 0;
 
 void f2ba(float f, byte *dataArray) {
@@ -35,7 +35,7 @@ float ba2f(byte *dataArray){
 void setup() {
   Serial.begin(115200);
   
-  Serial1.begin(115200);
+//  Serial1.begin(115200);
   pinMode(3, INPUT_PULLUP);
   pinMode(4, INPUT_PULLUP);
   rot.init();
@@ -58,11 +58,11 @@ void loop() {
     Serial.write((uint8_t)3);
     Serial.flush();
     
-    Serial1.print(ev.q);
-    Serial1.print(" ");
-    Serial1.print(ev.cnt);
-    Serial1.print(" ");
-    Serial1.println(3);
+//    Serial1.print(ev.q);
+//    Serial1.print(" ");
+//    Serial1.print(ev.cnt);
+//    Serial1.print(" ");
+//    Serial1.println(3);
   }
   r4.loop();
   r4.getEvent(ev);
@@ -75,11 +75,11 @@ void loop() {
     Serial.write((uint8_t)4);
     Serial.flush();
     
-    Serial1.print(ev.q);
-    Serial1.print(" ");
-    Serial1.print(ev.cnt);
-    Serial1.print(" ");
-    Serial1.println(4);
+//    Serial1.print(ev.q);
+//    Serial1.print(" ");
+//    Serial1.print(ev.cnt);
+//    Serial1.print(" ");
+//    Serial1.println(4);
   }
   uint32_t now = millis();
   if(r3.isPressed() && now-last_gyro_send >= period){
@@ -87,7 +87,7 @@ void loop() {
     Quaternion data;
     if(!rot.getRotation(data))
       return;
-    Serial.write(Recognizer::NONE);
+    Serial.write(Recognizer::MOVE);
     float w = data.w;
     float x = data.x;
     float y = data.y;
@@ -103,15 +103,15 @@ void loop() {
     Serial.write(arr, 4);
     Serial.flush();
 
-//    byte arr[4];
-//    f2ba(w, arr);
-    Serial1.write(Recognizer::NONE);
-    Serial1.print(w, 4);
-    Serial1.print(" ");
-    Serial1.print(x, 4);
-    Serial1.print(" ");
-    Serial1.print(y, 4);
-    Serial1.print(" ");
-    Serial1.println(z, 4);
+//    Serial1.print(Recognizer::NONE);
+//    Serial1.print(w, 4);
+//    Serial1.print(" ");
+//    Serial1.print(x, 4);
+//    Serial1.print(" ");
+//    Serial1.print(y, 4);
+//    Serial1.print(" ");
+//    Serial1.println(z, 4);
   }
+  delay(1);
+
 }
