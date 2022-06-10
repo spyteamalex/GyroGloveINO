@@ -17,20 +17,21 @@ volatile bool mpuFlag = false;
 MPU6050 mpu;
 uint8_t fifoBuffer[45];
 const int8_t CHOOSE = 0;
-uint8_t period = 10;
+uint8_t period = 50;
 uint32_t last_gyro_send = 0;
 
 void f2ba(float f, byte *dataArray) {
+  int32_t f2 = (int32_t)(f*100000000);
   for(int i = 0; i < 4; i++)
-    dataArray[i] = ((uint8_t*)&f)[i];
+    dataArray[i] = ((uint8_t*)&f2)[i];
 }
 
-float ba2f(byte *dataArray){
-  float a;
-  for(int i = 0; i < 4; i++)
-    ((uint8_t*)&a)[i] = dataArray[i];
-  return a;
-}
+//float ba2f(byte *dataArray){
+//  float a;
+//  for(int i = 0; i < 4; i++)
+//    ((uint8_t*)&a)[i] = dataArray[i];
+//  return a;
+//}
 
 void setup() {
   Serial.begin(115200);
@@ -81,12 +82,16 @@ void loop() {
 //    Serial1.print(" ");
 //    Serial1.println(4);
   }
+
+  
+  Quaternion data;
+  if(!rot.getRotation(data))
+    return;
+
+      
   uint32_t now = millis();
   if(r3.isPressed() && now-last_gyro_send >= period){
     last_gyro_send = now;
-    Quaternion data;
-    if(!rot.getRotation(data))
-      return;
     Serial.write(Recognizer::MOVE);
     float w = data.w;
     float x = data.x;
@@ -112,6 +117,6 @@ void loop() {
 //    Serial1.print(" ");
 //    Serial1.println(z, 4);
   }
-  delay(1);
+//  delay(1);
 
 }
