@@ -32,7 +32,7 @@ class Recognizer{
     bool prs = false;
     uint8_t cnt = 0;
     const uint32_t CLICK_GAP = 250;
-    const uint32_t MIN_GAP = 10;
+    const uint32_t MIN_GAP = 30;
     const uint8_t MAX_CNT = 4;
     
   public: 
